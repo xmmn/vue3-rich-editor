@@ -1,7 +1,7 @@
-import { IEditor } from '..'
+import { CommonEditor } from '..'
 
 export interface Plugin {
-    name: string,
+    name: string;
     // 注册插件
-    install(context: IEditor): void
+    install(context: CommonEditor): void;
 }

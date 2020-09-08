@@ -1,56 +1,67 @@
-import { Plugin } from '..'
+import { Plugin, Node } from '..'
 
 export interface EditorPlugin {
     // all plugins
     plugins: {
-        [pluginName: string]: Plugin
-    },
+        [pluginName: string]: Plugin;
+    };
 
     commands: {
-        [cmd: string]: Plugin
-    }
+        [cmd: string]: Plugin;
+    };
 
-    addPlugin(plugin: Plugin): void
-    hasPlugin(name): boolean
-    getPlugin(name): Plugin
+    addPlugin(plugin: Plugin): void;
+    hasPlugin(name: string): boolean;
+    getPlugin(name: string): Plugin;
 
     // registe a cmd
-    registeCmd(cmd: string, plugin: Plugin): void
+    registeCmd(cmd: string, plugin: Plugin): void;
 }
 
-export interface IEditor extends EditorPlugin { }
+export interface CommonEditor extends EditorPlugin {
+    nodes: Array<Node>;
+}
 
 let pid = 0
 
-class Editor implements IEditor {
-    plugins = {}
-    commands = {}
+class Editor implements CommonEditor {
+    plugins: {
+        [pluginName: string]: Plugin;
+    } = {}
 
-    constructor() { }
+    commands: {
+        [cmd: string]: Plugin;
+    } = {}
 
-    addPlugin(plugin: Plugin): void {
-        const { name = `p-${pid++}` } = plugin
+    nodes: Array<Node> = []
 
-        if (this.hasPlugin(name)) {
-            throw new Error(`cannot add same name plugin: ${name}`)
-        }
-
-        this.plugins[name] = plugin
+    constructor (nodes: Node[]) {
+      this.nodes = nodes
     }
 
-    hasPlugin(name: string) {
-        return this.plugins[name]
+    addPlugin (plugin: Plugin): void {
+      const { name = `p-${pid++}` } = plugin
+
+      if (this.hasPlugin(name)) {
+        throw new Error(`cannot add same name plugin: ${name}`)
+      }
+
+      this.plugins[name] = plugin
     }
 
-    getPlugin(name: string){
-        return this.plugins[name]
+    hasPlugin (name: string) {
+      return !!this.plugins[name]
     }
 
-    registeCmd(cmd: string, plugin: Plugin): void {
-        throw new Error("Method not implemented.");
+    getPlugin (name: string) {
+      return this.plugins[name]
+    }
+
+    registeCmd (cmd: string, plugin: Plugin): void {
+      this.commands[cmd] = plugin
     }
 }
 
 export {
-    Editor
+  Editor
 }
