@@ -6,7 +6,7 @@
     "serve": "npm run eslint:fix && vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "eslint:fix": "eslint --fix --ext .ts,.vue packages src"
+    "eslint:fix": "eslint --fix --ext .ts,.vue,.tsx packages src"
   },
   "dependencies": {
     "core-js": "^3.6.5",

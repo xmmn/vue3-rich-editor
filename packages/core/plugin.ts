@@ -1,4 +1,4 @@
-import { CommonEditor } from '..'
+import { CommonEditor } from '.'
 
 export interface Plugin {
     name: string;

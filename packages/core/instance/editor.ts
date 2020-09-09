@@ -1,5 +1,6 @@
-import { Plugin, Node } from '..'
+import { Plugin, Node, HookKeys, Hook } from '..'
 
+// relation plugin
 export interface EditorPlugin {
     // all plugins
     plugins: {
@@ -18,12 +19,33 @@ export interface EditorPlugin {
     registeCmd(cmd: string, plugin: Plugin): void;
 }
 
-export interface CommonEditor extends EditorPlugin {
+// relation hooks
+export interface HookPlugin {
+    hooks: {
+        [key: string]: Array<Hook>;
+    };
+}
+
+export interface CommonEditor extends EditorPlugin, HookPlugin {
     nodes: Array<Node>;
+}
+
+function initHooks (this: Editor): void{
+  for (const key in this.hookKeys) {
+    this.hooks[key] = []
+  }
+}
+
+function initPlugins (this: Editor, plugins: Array<Plugin>): void{
+  plugins.forEach(plugin => {
+    this.addPlugin(plugin)
+    plugin.install(this)
+  })
 }
 
 let pid = 0
 
+// define base Editor, regiter plugin, operate data, tigger hooks
 class Editor implements CommonEditor {
     plugins: {
         [pluginName: string]: Plugin;
@@ -33,10 +55,19 @@ class Editor implements CommonEditor {
         [cmd: string]: Plugin;
     } = {}
 
+    hookKeys: {[key: string]: string} = HookKeys
+    hooks: { [key: string]: Array<Hook> } = {}
     nodes: Array<Node> = []
 
-    constructor (nodes: Node[]) {
+    constructor (nodes: Node[], options?: {
+        plugins: Array<Plugin>;
+    }) {
       this.nodes = nodes
+      const { plugins = [] } = options || {}
+
+      // init Hooks
+      initHooks.call(this)
+      initPlugins.call(this, plugins)
     }
 
     addPlugin (plugin: Plugin): void {
@@ -59,6 +90,14 @@ class Editor implements CommonEditor {
 
     registeCmd (cmd: string, plugin: Plugin): void {
       this.commands[cmd] = plugin
+    }
+
+    registeHook (key: string, hook: Hook) {
+      if (!this.hooks[key]) {
+        this.hooks[key] = []
+      }
+
+      this.hooks[key].push(hook)
     }
 }
 
