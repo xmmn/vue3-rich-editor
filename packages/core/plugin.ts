@@ -2,6 +2,6 @@ import { CommonEditor } from '.'
 
 export interface Plugin {
     name: string;
-    // 注册插件
+    // install cmd component or else
     install(context: CommonEditor): void;
 }
