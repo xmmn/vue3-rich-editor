@@ -1,4 +1,5 @@
 import { Editor, Plugin } from '../..'
+import { Component } from 'vue'
 
 export interface CommandHandler {
     (context: Editor, ...others: any[]): void;
@@ -13,6 +14,11 @@ export class EditorPlugin {
 
     commands: {
         [cmd: string]: CommandHandler;
+    } = {}
+
+    componentNamePrex: string = 'com-'
+    components: {
+        [componentName: string]: Component
     } = {}
 
     addPlugin (plugin: Plugin): void {

@@ -31,4 +31,9 @@ export class Editor extends BaseEditor {
   toEditorRange (domSelection: Selection) {
     return domSelection
   }
+
+  // how to render node by node type
+  getComponent (node: ENode) {
+    
+  }
 }
