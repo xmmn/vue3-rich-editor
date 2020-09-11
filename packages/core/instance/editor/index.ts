@@ -1,30 +1,13 @@
-import { Plugin, ENode, HookKeys, Hook } from '../..'
-import { CommandHandler, initPlugins, EditorPlugin } from './editor-plugin'
-import { initHooks, HookPlugin } from './editor-hoos'
-
-export interface CommonEditor extends EditorPlugin, HookPlugin {
-  nodes: Array<ENode>;
-}
-
-let pid = 0
-
-// define base Editor, regiter plugin, operate data, tigger hooks
-class Editor implements CommonEditor {
-  plugins: {
-    [pluginName: string]: Plugin;
-  } = {}
-
-  commands: {
-    [cmd: string]: CommandHandler;
-  } = {}
-
-  hookKeys: { [key: string]: string } = HookKeys
-  hooks: { [key: string]: Array<Hook> } = {}
-  nodes: Array<ENode> = []
-
+import { BaseEditor } from './base'
+import { ENode, Plugin } from '../..'
+import { initPlugins } from './editor-plugin'
+import { initHooks } from './editor-hooks'
+// transform
+export class Editor extends BaseEditor {
   constructor (nodes: ENode[], options?: {
     plugins: Array<Plugin>;
   }) {
+    super()
     this.nodes = nodes
     const { plugins = [] } = options || {}
 
@@ -33,37 +16,19 @@ class Editor implements CommonEditor {
     initPlugins.call(this, plugins)
   }
 
-  addPlugin (plugin: Plugin): void {
-    const { name = `p-${pid++}` } = plugin
+  isFocus (container: HTMLElement) {
+    return document.activeElement === container
+  }
 
-    if (this.hasPlugin(name)) {
-      throw new Error(`cannot add same name plugin: ${name}`)
+  getSelection () {
+    const domSelection = window.getSelection()
+    if (domSelection) {
+      const range = this.toEditorRange(domSelection)
+      console.log(range)
     }
-
-    this.plugins[name] = plugin
   }
 
-  hasPlugin (name: string) {
-    return !!this.plugins[name]
+  toEditorRange (domSelection: Selection) {
+    return domSelection
   }
-
-  getPlugin (name: string) {
-    return this.plugins[name]
-  }
-
-  registeCmd (cmd: string, fn: CommandHandler): void {
-    this.commands[cmd] = fn
-  }
-
-  registeHook (key: string, hook: Hook) {
-    if (!this.hooks[key]) {
-      this.hooks[key] = []
-    }
-
-    this.hooks[key].push(hook)
-  }
-}
-
-export {
-  Editor
 }

@@ -5,27 +5,42 @@ export interface CommandHandler {
 }
 
 // relation plugin
-export interface EditorPlugin {
-    // all plugins
+let pid = 0
+export class EditorPlugin {
     plugins: {
         [pluginName: string]: Plugin;
-    };
+    } = {}
 
     commands: {
         [cmd: string]: CommandHandler;
-    };
+    } = {}
 
-    addPlugin(plugin: Plugin): void;
-    hasPlugin(name: string): boolean;
-    getPlugin(name: string): Plugin;
+    addPlugin (plugin: Plugin): void {
+      const { name = `p-${pid++}` } = plugin
 
-    // registe a cmd
-    registeCmd(cmd: string, fn: CommandHandler): void;
+      if (this.hasPlugin(name)) {
+        throw new Error(`cannot add same name plugin: ${name}`)
+      }
+
+      this.plugins[name] = plugin
+    }
+
+    hasPlugin (name: string) {
+      return !!this.plugins[name]
+    }
+
+    getPlugin (name: string) {
+      return this.plugins[name]
+    }
+
+    registeCmd (cmd: string, fn: CommandHandler): void {
+      this.commands[cmd] = fn
+    }
 }
 
 export function initPlugins (this: Editor, plugins: Array<Plugin>): void {
   plugins.forEach(plugin => {
-    this.addPlugin(plugin)
+    this.plugin.addPlugin(plugin)
     plugin.install(this)
   })
 }

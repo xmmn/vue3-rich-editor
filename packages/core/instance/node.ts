@@ -1,14 +1,25 @@
+import { isUndef } from '../../utils/tool'
+
 export type ENode = {
-  isENode: true;
   type: string;
   [attr: string]: any;
   children: Array<ENode>;
   text?: string;
 }
 
+const textType = 'text-node'
+
 export const ENodeHamdler = {
   isENode (obj: any) {
-    return obj.isENode
+    if (!obj.type) {
+      return false
+    } else {
+      if (obj.type === textType) {
+        return !isUndef(obj.text)
+      } else {
+        return !isUndef(obj.children)
+      }
+    }
   },
 
   createNode (
@@ -16,7 +27,6 @@ export const ENodeHamdler = {
     children: Array<ENode> = [],
     attrs: { [attr: string]: any } = {}): ENode {
     return {
-      isENode: true,
       type,
       children,
       ...attrs
@@ -25,8 +35,7 @@ export const ENodeHamdler = {
 
   createTextNode (text: string, attrs: { [attr: string]: any } = {}): ENode {
     return {
-      isENode: true,
-      type: 'text-node',
+      type: textType,
       children: [],
       ...attrs,
       text

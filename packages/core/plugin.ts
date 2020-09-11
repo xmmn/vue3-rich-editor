@@ -1,7 +1,8 @@
-import { CommonEditor } from '.'
+
+import { Editor } from './instance/editor'
 
 export interface Plugin {
     name: string;
     // install cmd component or else
-    install(context: CommonEditor): void;
+    install(context: Editor): void;
 }

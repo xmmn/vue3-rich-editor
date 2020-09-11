@@ -9,7 +9,9 @@
     "eslint:fix": "eslint --fix --ext .ts,.vue,.tsx packages src"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.161",
     "core-js": "^3.6.5",
+    "lodash": "^4.17.20",
     "vue": "^3.0.0-0"
   },
   "devDependencies": {
