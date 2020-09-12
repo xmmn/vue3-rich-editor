@@ -1,12 +1,28 @@
-import { defineComponent, ref, h } from 'vue'
+import { defineComponent, ref, h, VNode } from 'vue'
 import { createEditor } from './members'
 import { debounce } from 'lodash'
 
 import FontPlugin from '../plugin-font'
-import { ENodeHamdler, ENode } from '../core'
+import ParagraphPlugin from '../plugin-paragraph'
+import Textplugin from '../plugin-text'
+import IdPlugin from '../plugin-id'
 
-function renderContent (nodes: ENode[]) {
-  console.log(nodes)
+import { ENodeHamdler, ENode, Editor } from '../core'
+
+function renderContent (editor: Editor, nodes: ENode[]): VNode[] {
+  // trigger preRender hook
+  editor.hook.triggerHook(editor.hook.hookKeys.preRender, {
+    context: editor,
+    data: nodes
+  })
+  return nodes.map(node => {
+    const comp = editor.getComponent(node)
+    if (ENodeHamdler.isTextNode(node)) {
+      return h(comp, node.text)
+    } else {
+      return h(comp, renderContent(editor, node.children))
+    }
+  })
 }
 
 export default defineComponent({
@@ -15,19 +31,18 @@ export default defineComponent({
     const editor = createEditor([
       ENodeHamdler.createNode('p', [
         ENodeHamdler.createTextNode('asdf')
-      ])], [new FontPlugin()])
+      ])], [new FontPlugin(), new ParagraphPlugin(), new Textplugin(), new IdPlugin()])
     // when editor is updated, we need reset selection
     // update user selection
     window.document.addEventListener('selectionchange', debounce(() => {
       editor.getSelection()
     }, 100))
 
-    renderContent(editor.nodes)
     return () => {
       return <div contenteditable ref={container}>
         {
           /* render nodes */
-          h('div', 'adfasdfsd')
+          renderContent(editor, editor.nodes)
         }
       </div>
     }

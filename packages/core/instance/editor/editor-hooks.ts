@@ -1,10 +1,16 @@
 import { Editor, Hook, HookKeys } from '../..'
+import { ENode } from '../node'
 
 // relation hooks
 export interface HookPlugin {
     hooks: {
         [key: string]: Array<Hook>;
     };
+}
+
+export type HookTriggerData = {
+  context: Editor;
+  data: ENode[] | ENode;
 }
 
 export class HookPlugin {
@@ -16,6 +22,16 @@ export class HookPlugin {
       }
 
       this.hooks[key].push(hook)
+    }
+
+    triggerHook (hookName: string, data: HookTriggerData) {
+      const hooks = this.hooks[hookName]
+
+      if (hooks && hooks.length) {
+        hooks.forEach(hook => {
+          hook(data)
+        })
+      }
     }
 }
 

@@ -34,6 +34,6 @@ export class Editor extends BaseEditor {
 
   // how to render node by node type
   getComponent (node: ENode) {
-    
+    return this.component.findComponent(node.type)
   }
 }

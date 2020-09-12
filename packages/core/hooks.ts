@@ -1,15 +1,15 @@
-import { Editor } from '.'
+import { HookTriggerData } from './instance/editor/editor-hooks'
 
 export const HookKeys: {
     [key: string]: string;
 } = {
   // update editor data before create editor components
-  preInit: 'preInit',
+  preRender: 'preRender',
 
   // when a component is mounted, this hook will be trigger
-  mounted: 'mounted'
+  afterRender: 'afterRender'
 }
 
 export interface Hook {
-    (editor: Editor): void;
+    (data: HookTriggerData): void;
 }

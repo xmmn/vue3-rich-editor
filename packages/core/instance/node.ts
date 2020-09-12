@@ -1,6 +1,7 @@
 import { isUndef } from '../../utils/tool'
 
 export type ENode = {
+  id?: number;
   type: string;
   [attr: string]: any;
   children: Array<ENode>;
@@ -20,6 +21,10 @@ export const ENodeHamdler = {
         return !isUndef(obj.children)
       }
     }
+  },
+
+  isTextNode (node: ENode) {
+    return ENodeHamdler.isENode(node) && !isUndef(node.text)
   },
 
   createNode (
