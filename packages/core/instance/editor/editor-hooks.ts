@@ -11,6 +11,7 @@ export interface HookPlugin {
 export type HookTriggerData = {
   context: Editor;
   data: ENode[] | ENode;
+  [key: string]: any;
 }
 
 export class HookPlugin {

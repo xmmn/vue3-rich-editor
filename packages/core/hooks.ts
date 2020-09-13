@@ -7,7 +7,9 @@ export const HookKeys: {
   preRender: 'preRender',
 
   // when a component is mounted, this hook will be trigger
-  afterRender: 'afterRender'
+  afterRender: 'afterRender',
+
+  afterCreateVnode: 'afterCreateVnode'
 }
 
 export interface Hook {

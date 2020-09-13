@@ -1,11 +1,6 @@
 import { defineComponent, ref, h, VNode } from 'vue'
-import { createEditor } from './members'
+import { createEditor, allPlugins, testData } from './members'
 import { debounce } from 'lodash'
-
-import FontPlugin from '../plugin-font'
-import ParagraphPlugin from '../plugin-paragraph'
-import Textplugin from '../plugin-text'
-import IdPlugin from '../plugin-id'
 
 import { ENodeHamdler, ENode, Editor } from '../core'
 
@@ -17,21 +12,31 @@ function renderContent (editor: Editor, nodes: ENode[]): VNode[] {
   })
   return nodes.map(node => {
     const comp = editor.getComponent(node)
+    let vnode
     if (ENodeHamdler.isTextNode(node)) {
-      return h(comp, node.text)
+      vnode = h(comp, node.text)
     } else {
-      return h(comp, renderContent(editor, node.children))
+      vnode = h(comp, renderContent(editor, node.children))
+      vnode.props = {
+        style: {
+          color: 'red'
+        }
+      }
     }
+    editor.hook.triggerHook(editor.hook.hookKeys.afterCreateVnode, {
+      context: editor,
+      data: node,
+      vnode
+    })
+    console.log(vnode)
+    return vnode
   })
 }
 
 export default defineComponent({
   setup () {
     const container = ref(null)
-    const editor = createEditor([
-      ENodeHamdler.createNode('p', [
-        ENodeHamdler.createTextNode('asdf')
-      ])], [new FontPlugin(), new ParagraphPlugin(), new Textplugin(), new IdPlugin()])
+    const editor = createEditor(testData, allPlugins)
     // when editor is updated, we need reset selection
     // update user selection
     window.document.addEventListener('selectionchange', debounce(() => {
