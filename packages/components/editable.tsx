@@ -17,18 +17,12 @@ function renderContent (editor: Editor, nodes: ENode[]): VNode[] {
       vnode = h(comp, node.text)
     } else {
       vnode = h(comp, renderContent(editor, node.children))
-      vnode.props = {
-        style: {
-          color: 'red'
-        }
-      }
     }
     editor.hook.triggerHook(editor.hook.hookKeys.afterCreateVnode, {
       context: editor,
       data: node,
       vnode
     })
-    console.log(vnode)
     return vnode
   })
 }

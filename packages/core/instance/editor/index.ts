@@ -36,4 +36,17 @@ export class Editor extends BaseEditor {
   getComponent (node: ENode) {
     return this.component.findComponent(node.type)
   }
+
+  // excute component emit
+  excute (id: number, cb: (node: ENode, context: Editor) => void, how?: (context: Editor) => ENode) {
+    // find the node, and call callback
+    let node: ENode
+    if (how) {
+      node = how(this)
+    } else {
+      node = this.map.get(id)
+    }
+
+    cb && cb(node, this)
+  }
 }
