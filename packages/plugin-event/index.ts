@@ -1,21 +1,25 @@
-import { Plugin, Editor, ENode } from '../core'
+import { Plugin, Editor, HowFindNodeFn, ExcuteCallBackFn } from '../core'
 import { isUndef } from '../utils/tool'
 
+type ExcuteArgument = {
+  id: number;
+  cb: ExcuteCallBackFn;
+  how?: HowFindNodeFn;
+}
+
 export default class EventPlugin implements Plugin {
-    name = 'plugin-event'
+  name = 'plugin-event'
 
-    install (context: Editor) {
-      context.hook.registeHook(
-        context.hook.hookKeys.afterCreateVnode,
-        ({ context, vnode }) => {
-          if (isUndef(vnode.props)) vnode.props = {}
-          if (isUndef(vnode.props.on)) vnode.props.on = {}
-
-          vnode.props.on.excute = ({ id, cb, how }:
-            {id: number; cb: (node: ENode, context: Editor) => void; how?: (context: Editor) => ENode}) => {
-            context.excute(id, cb, how)
-          }
+  install (context: Editor) {
+    context.hook.registeHook(
+      context.hook.hookKeys.afterCreateVnode,
+      ({ context, vnode }) => {
+        if (isUndef(vnode.props)) vnode.props = {}
+        // set event to node
+        vnode.props.onExcute = ({ id, cb, how }: ExcuteArgument) => {
+          context.excute(id, cb, how)
         }
-      )
-    }
+      }
+    )
+  }
 }

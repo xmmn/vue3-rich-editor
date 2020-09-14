@@ -2,6 +2,10 @@ import { BaseEditor } from './base'
 import { ENode, Plugin } from '../..'
 import { initPlugins } from './editor-plugin'
 import { initHooks } from './editor-hooks'
+
+export type ExcuteCallBackFn = (node: ENode, context: Editor) => void
+export type HowFindNodeFn = (context: Editor) => ENode
+
 // transform
 export class Editor extends BaseEditor {
   constructor (nodes: ENode[], options?: {
@@ -38,7 +42,7 @@ export class Editor extends BaseEditor {
   }
 
   // excute component emit
-  excute (id: number, cb: (node: ENode, context: Editor) => void, how?: (context: Editor) => ENode) {
+  excute (id: number, cb: ExcuteCallBackFn, how?: HowFindNodeFn) {
     // find the node, and call callback
     let node: ENode
     if (how) {

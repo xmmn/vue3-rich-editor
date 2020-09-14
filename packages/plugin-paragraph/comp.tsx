@@ -1,5 +1,5 @@
 import { defineComponent } from 'vue'
-import { Editor } from '../core'
+import { Editor, ENode } from '../core'
 
 export default defineComponent({
 
@@ -7,8 +7,8 @@ export default defineComponent({
     const click = () => {
       emit('excute', {
         id: 0,
-        cb: (context: Editor) => {
-          console.log(context)
+        cb: (node: ENode, context: Editor) => {
+          console.log(node, context)
         }
       })
     }

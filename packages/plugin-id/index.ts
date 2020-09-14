@@ -5,7 +5,7 @@ import { VNode } from 'vue'
 let isFirst = true
 let id = 0
 
-function eachNode (nodes: ENode[]) {
+function eachNode (nodes: ENode[], context: Editor) {
   nodes.forEach(node => {
     if (isFirst) {
       node.id = id++
@@ -15,8 +15,11 @@ function eachNode (nodes: ENode[]) {
       }
     }
 
+    // save id, node relation
+    context.map.add(node.id!, node)
+
     if (node.children && node.children.length) {
-      eachNode(node.children)
+      eachNode(node.children, context)
     }
   })
 }
@@ -32,9 +35,9 @@ export default class IdPlugin implements Plugin {
           data
         }) => {
           if (data.length) {
-            eachNode(data as ENode[])
+            eachNode(data as ENode[], context)
           } else {
-            eachNode([data as ENode])
+            eachNode([data as ENode], context)
           }
 
           isFirst = false

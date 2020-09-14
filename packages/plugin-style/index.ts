@@ -3,7 +3,7 @@ import { isUndef } from '../utils/tool'
 
 const styleList: {[key: string]: any} = {
   lineHeight: (node: ENode) => {
-    return `${node.lineHeight}px`
+    return isUndef(node.lineHeight) ? undefined : `${node.lineHeight}px`
   }
 }
 
