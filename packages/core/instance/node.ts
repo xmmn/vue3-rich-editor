@@ -10,7 +10,7 @@ export type ENode = {
 
 const textType = 'text-node'
 
-export const ENodeHamdler = {
+export const ENodeHandler = {
   isENode (obj: any) {
     if (!obj.type) {
       return false
@@ -24,7 +24,7 @@ export const ENodeHamdler = {
   },
 
   isTextNode (node: ENode) {
-    return ENodeHamdler.isENode(node) && !isUndef(node.text)
+    return ENodeHandler.isENode(node) && !isUndef(node.text)
   },
 
   createNode (

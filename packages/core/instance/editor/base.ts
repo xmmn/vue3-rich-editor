@@ -11,4 +11,5 @@ export class BaseEditor {
   component: EditorComponent = new EditorComponent()
   nodes: Array<ENode> = []
   map: EditorMap = new EditorMap()
+  el: HTMLElement = {} as HTMLElement
 }

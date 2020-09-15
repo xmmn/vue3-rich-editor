@@ -49,7 +49,7 @@ export default class IdPlugin implements Plugin {
           if (!isUndef(vnode)) {
             const v = vnode as VNode
             if (!v.props) v.props = {}
-            v.props['date-id'] = (data as ENode).id
+            v.props['data-id'] = (data as ENode).id
           }
         }
       )

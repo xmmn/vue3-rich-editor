@@ -1,8 +1,8 @@
-import { ENodeHamdler } from '../../core'
+import { ENodeHandler } from '../../core'
 
 export const testData = [
-  ENodeHamdler.createNode('p', [
-    ENodeHamdler.createTextNode('asdf')
+  ENodeHandler.createNode('p', [
+    ENodeHandler.createTextNode('asdf')
   ], {
     lineHeight: 40
   })
